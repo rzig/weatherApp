@@ -40,6 +40,8 @@ target 'weatherAppV2' do
 
   pod 'RNScreens', :path => '../node_modules/react-native-screens'
 
+  pod 'react-native-mapbox-gl', :path => '../node_modules/@react-native-mapbox-gl/maps'
+
   target 'weatherAppV2Tests' do
     inherit! :search_paths
     # Pods for testing
