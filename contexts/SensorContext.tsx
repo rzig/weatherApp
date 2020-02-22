@@ -12,7 +12,7 @@ let sensors: Array<Sensor> = [
     {
         name: "Sensor 2",
         longitude: -83.002387,
-        latitude: 39.859195,
+        latitude: 39.950195,
         notes: "Hi",
         uuid: "2"
     }
