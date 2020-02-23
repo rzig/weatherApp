@@ -1,7 +1,7 @@
 import React, { useReducer, useContext } from 'react';
 import { Sensor } from '../types/Sensor';
 
-let sensors: Array<Sensor> = [
+let initialSensors: Array<Sensor> = [
     {
         name: "Sensor 1",
         longitude: -83.002387,
@@ -24,7 +24,17 @@ type Dispatch = (action: Action) => void;
 function sensorReducer(sensors: Array<Sensor>, action: Action): Array<Sensor> {
     switch(action.type) {
         case 'UPDATE_SENSOR': {
-            //
+            const uuid = action.uuid;
+            const newValues: Partial<Sensor> = action.newValues;
+            let newSensors = [];
+            sensors.forEach(sensor => {
+                if(sensor.uuid === uuid) {
+                    newSensors.push({...sensor, ...newValues})
+                } else {
+                    newSensors.push(sensor);
+                }
+            })
+            return newSensors;
         }
         case "ADD_SENSOR": {
             //
@@ -42,7 +52,7 @@ const SensorsDispatchContext = React.createContext<Dispatch | undefined>(undefin
 const SensorsStateContext = React.createContext<Array<Sensor> | undefined>(undefined);
 
 function SensorsProvider({children}: {children: React.ReactNode}) {
-    const [state, dispatch] = useReducer(sensorReducer, sensors);
+    const [state, dispatch] = useReducer(sensorReducer, initialSensors);
     return (
         <SensorsStateContext.Provider value={state}>
             <SensorsDispatchContext.Provider value={dispatch}>

@@ -6,10 +6,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './screens/Home';
 import { SensorsProvider } from './contexts/SensorContext';
+import { Sensor } from './types/Sensor';
+import SensorView from './screens/SensorView';
+import { NavigationStack } from './types/NavigationStack';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<NavigationStack>();
 
-// I shouldn't have to do this!!! Expo needs a little work.
 export default function App() {
   return (
     <UserProvider>
@@ -19,6 +21,7 @@ export default function App() {
             <Stack.Navigator headerMode="none" initialRouteName="Login">
               <Stack.Screen name="Login" component={Login}/>
               <Stack.Screen name="Home" component={Home}/>
+              <Stack.Screen name="SensorView" component={SensorView}/>
             </Stack.Navigator>
           </View>
         </NavigationContainer>

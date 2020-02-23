@@ -8,6 +8,7 @@ import { colors } from '../styles/colors';
 import MapboxGL from "@react-native-mapbox-gl/maps";
 import {mapboxToken, mapStyleURL} from '../config';
 import { useSensors } from '../contexts/SensorContext';
+import { useNavigation } from '@react-navigation/native';
 
 interface MarkerProps {
     lon: number,
@@ -30,10 +31,9 @@ MapboxGL.setAccessToken(mapboxToken);
 
 function Home() {
     const sensors = useSensors();
-
     const [datavis, setDatavis] = useState<boolean>(false);
-
     const camera = useRef<MapboxGL.Camera>();
+    const navigation = useNavigation();
 
     const transition = () => {
         if(!datavis) {
@@ -107,7 +107,7 @@ function Home() {
                         lon={sensor.longitude}
                         lat={sensor.latitude}
                         id={sensor.uuid}
-                        onPress={() => alert(sensor.notes)}
+                        onPress={() => navigation.navigate("SensorView", {sensor})}
                         key={sensor.uuid}
                     />
                 ))}
