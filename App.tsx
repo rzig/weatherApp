@@ -9,6 +9,7 @@ import { SensorsProvider } from './contexts/SensorContext';
 import { Sensor } from './types/Sensor';
 import SensorView from './screens/SensorView';
 import { NavigationStack } from './types/NavigationStack';
+import Scanner from './screens/Scanner';
 
 const Stack = createStackNavigator<NavigationStack>();
 
@@ -22,6 +23,7 @@ export default function App() {
               <Stack.Screen name="Login" component={Login}/>
               <Stack.Screen name="Home" component={Home}/>
               <Stack.Screen name="SensorView" component={SensorView}/>
+              <Stack.Screen name="Scanner" component={Scanner}/>
             </Stack.Navigator>
           </View>
         </NavigationContainer>

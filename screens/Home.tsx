@@ -61,7 +61,7 @@ function Home() {
                 <TouchableOpacity onPress={transition}>
                     <MaterialIcon.default name="cube" size={45} color={colors.dark} style={styles.icon}/>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => {}}>
+                <TouchableOpacity onPress={() => {navigation.navigate("Scanner")}}>
                     <AntIcon.default name="pluscircle" size={45} color={colors.dark} style={styles.icon}/>
                 </TouchableOpacity>
             </View>
