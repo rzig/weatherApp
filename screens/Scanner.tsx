@@ -27,7 +27,7 @@ function Scanner() {
                     latitude,
                     uuid: jsonData.uuid
                 }
-                navigation.navigate("SensorView", {sensor})
+                navigation.navigate("SensorView", {sensor, create: true})
             })
         }
     }

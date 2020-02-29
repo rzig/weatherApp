@@ -35,6 +35,8 @@ function Home() {
     const camera = useRef<MapboxGL.Camera>();
     const navigation = useNavigation();
 
+    console.warn("My sensors are " + JSON.stringify(sensors));
+
     const transition = () => {
         if(!datavis) {
             camera.current.setCamera({

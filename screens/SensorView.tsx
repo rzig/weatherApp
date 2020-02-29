@@ -13,11 +13,13 @@ import { TextInput } from 'react-native-gesture-handler';
 import { fonts } from '../styles/text';
 import Marker from '../components/Marker';
 import { useSensorsDispatch } from '../contexts/SensorContext';
+import Button from '../components/Button';
+import * as MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Props {
     route: RouteProp<NavigationStack, 'SensorView'>
 }
-function SensorView({route: {params: {sensor}}}: Props) {
+function SensorView({route: {params: {sensor, create}}}: Props) {
     const navigation = useNavigation();
     const [name, setName] = useState<string>(sensor.name);
     const [notes, setNotes] = useState<string>(sensor.notes);
@@ -28,7 +30,7 @@ function SensorView({route: {params: {sensor}}}: Props) {
 
     const save = () => {
         sensorsDispatch({
-            type: "UPDATE_SENSOR",
+            type: create ? "ADD_SENSOR" : "UPDATE_SENSOR",
             uuid: sensor.uuid,
             newValues: {
                 name,
@@ -59,6 +61,26 @@ function SensorView({route: {params: {sensor}}}: Props) {
                 ]
             )
         }
+    }
+
+    const attemptDelete = () => {
+        Alert.alert(
+            "Are you sure?",
+            "You are about to delete this sensor. This action cannot be undone.",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => {}
+                },
+                {
+                    text: "OK",
+                    onPress: () => {
+                        sensorsDispatch({type: "DELETE_SENSOR", uuid: sensor.uuid})
+                        navigation.goBack();
+                    }
+                }
+            ]
+        )
     }
 
     return (
@@ -103,9 +125,21 @@ function SensorView({route: {params: {sensor}}}: Props) {
                     <BodyText>Name</BodyText>
                     <TextInput value={name} style={styles.formInput} onChangeText={(newText) => {setName(newText); setHasUpdated(true)}}/>
                     <BodyText>Notes</BodyText>
-                    <TextInput value={notes} style={styles.formInput} multiline onChangeText={(newText) => {setNotes(newText); setHasUpdated(true)}}/>
+                    <TextInput
+                        value={notes}
+                        style={styles.formInput}
+                        onChangeText={(newText) => {setNotes(newText); setHasUpdated(true)}}
+                        maxLength={140}
+                        multiline
+                        keyboardType="default"
+                    />
                 </View>
             </KeyboardAvoidingView>
+            {!create && 
+                <TouchableOpacity onPress={() => attemptDelete()} style={styles.deleteIcon}>
+                    <MaterialIcon.default name="delete-circle" size={55} color={colors.dark}/>
+                </TouchableOpacity>
+            }
         </View>
     )
 }
@@ -167,4 +201,10 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         paddingHorizontal: 0
     },
+    deleteIcon: {
+        position: "absolute",
+        bottom: measures.outerGutter,
+        right: measures.outerGutter,
+        
+    }
 })
