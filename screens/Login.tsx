@@ -8,67 +8,63 @@ import Wave from '../assets/Wave'
 import { fonts } from '../styles/text'
 import MaskedView from '@react-native-community/masked-view';
 import Button from '../components/Button'
-import { useUser, useUserDispatch } from '../contexts/UserContext'
 import { useNavigation } from '@react-navigation/native'
+import auth from '@react-native-firebase/auth'
 
 function Login() {
     const navigation = useNavigation();
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
-    const user = useUser();
-    const userDispatch = useUserDispatch();
-
     const tryLogin = () => {
-        userDispatch({type: 'LOG_IN', email: username, password: password});
+        auth().signInWithEmailAndPassword(username, password).then((valid) => {
+            navigation.navigate("Home");
+        }, (invalid) => {
+            alert("Incorrect username or password.")
+        })
     }
 
-    if(user.signedIn) {
-        navigation.navigate("Home");
-        return <></>;
-    } else {
-        return (
-            <View style={styles.container}>
-                <HeaderText level={1} style={styles.headerText}>
-                    Welcome Back
-                </HeaderText>
-                <MaskedView
-                    style={styles.waveView}
-                    maskElement={
-                        <>
-                            <Wave fill="#000"/>
-                            <View style={{flex: 1, backgroundColor: "#000"}}/>
-                        </>
-                    }
-                >
-                    <KeyboardAvoidingView style={styles.formContainer} enabled behavior="padding" keyboardVerticalOffset={3 * measures.outerGutter}>
-                        <BodyText style={styles.formText}>Username</BodyText>
-                        <TextInput
-                            value={username}
-                            style={styles.formInput} 
-                            onChangeText={(newText) => setUsername(newText)}
-                            autoCompleteType="email"
-                            keyboardType="email-address"
-                            returnKeyLabel="Log In"
-                            autoCapitalize="none"
-                        />
-                        <BodyText style={styles.formText}>Password</BodyText>
-                        <TextInput
-                            value={password} 
-                            style={styles.formInput} 
-                            secureTextEntry 
-                            onChangeText={(newText) => setPassword(newText)}
-                            autoCompleteType="password"
-                            returnKeyLabel="Log In"
-                        />
-                    </KeyboardAvoidingView>
-                </MaskedView>
-                <View style={styles.loginButtonContainer}>
-                    <Button text="Login" onPress={() => tryLogin()} containerStyle={styles.loginButton}/>
-                </View>
+    return (
+        <View style={styles.container}>
+            <HeaderText level={1} style={styles.headerText}>
+                Welcome Back
+            </HeaderText>
+            <MaskedView
+                style={styles.waveView}
+                maskElement={
+                    <>
+                        <Wave fill="#000"/>
+                        <View style={{flex: 1, backgroundColor: "#000"}}/>
+                    </>
+                }
+            >
+                <KeyboardAvoidingView style={styles.formContainer} enabled behavior="padding" keyboardVerticalOffset={3 * measures.outerGutter}>
+                    <BodyText style={styles.formText}>Username</BodyText>
+                    <TextInput
+                        value={username}
+                        style={styles.formInput} 
+                        onChangeText={(newText) => setUsername(newText)}
+                        autoCompleteType="email"
+                        keyboardType="email-address"
+                        returnKeyLabel="Log In"
+                        autoCapitalize="none"
+                    />
+                    <BodyText style={styles.formText}>Password</BodyText>
+                    <TextInput
+                        value={password} 
+                        style={styles.formInput} 
+                        secureTextEntry 
+                        onChangeText={(newText) => setPassword(newText)}
+                        autoCompleteType="password"
+                        returnKeyLabel="Log In"
+                    />
+                </KeyboardAvoidingView>
+            </MaskedView>
+            <View style={styles.loginButtonContainer}>
+                <Button text="Login" onPress={() => tryLogin()} containerStyle={styles.loginButton}/>
             </View>
-        )
-    }
+        </View>
+    )
 }
 
 export default Login
