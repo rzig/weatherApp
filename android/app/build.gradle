@@ -133,6 +133,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        missingDimensionStrategy 'react-native-camera', 'general' // <--- insert this line
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -179,12 +181,15 @@ android {
 }
 
 dependencies {
-    implementation project(':@react-native-mapbox-gl_maps')
+    implementation project(':react-native-permissions')
+    implementation project(':react-native-camera')
+    // implementation project(':@react-native-mapbox-gl_maps')
     implementation project(':react-native-screens')
     implementation project(':react-native-reanimated')
     implementation project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation 'com.android.support:multidex:1.0.3'
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";

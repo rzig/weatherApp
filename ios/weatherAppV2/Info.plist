@@ -116,5 +116,8 @@
 		<string>PlayfairDisplay-SemiBold.ttf</string>
 		<string>PlayfairDisplay-SemiBoldItalic.ttf</string>
 	</array>
+	<!-- Required with iOS 10 and higher -->
+	<key>NSCameraUsageDescription</key>
+	<string>This app uses your camera to read QR codes.</string>
 </dict>
 </plist>
