@@ -102,6 +102,13 @@ function SensorsProvider({children}: {children: React.ReactNode}) {
                 }
             ];
             dispatch({type: "SET_SENSORS", backupSensors})
+        });
+        firestore().collection("devices").onSnapshot(({docs}) => {
+            let sensors: Array<Sensor> = [];
+            docs.forEach(doc => {
+                sensors.push(doc.data<Sensor>());
+            })
+            dispatch({type: "SET_SENSORS", sensors})
         })
     }, [])
 
