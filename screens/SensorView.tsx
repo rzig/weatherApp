@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, KeyboardAvoidingView, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TouchableOpacity, StyleSheet, Dimensions, ScrollView, KeyboardAvoidingView, Alert, Keyboard, LayoutChangeEvent } from 'react-native';
 import BodyText from '../components/BodyText';
 import { NavigationStack } from '../types/NavigationStack';
 import { RouteProp, useNavigation } from '@react-navigation/native';
@@ -13,7 +13,6 @@ import { TextInput } from 'react-native-gesture-handler';
 import { fonts } from '../styles/text';
 import Marker from '../components/Marker';
 import { useSensorsDispatch } from '../contexts/SensorContext';
-import Button from '../components/Button';
 import * as MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Props {
@@ -83,6 +82,18 @@ function SensorView({route: {params: {sensor, create}}}: Props) {
         )
     }
 
+    const [displayMap, setDisplayMap] = useState<boolean>(true);
+
+    const handleLayout = (event: LayoutChangeEvent) => {
+        if(event.nativeEvent.layout.height < 30) {
+            setDisplayMap(false);
+        } else {
+            setDisplayMap(true);
+        }
+    }
+
+    console.warn(displayMap);
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -95,33 +106,37 @@ function SensorView({route: {params: {sensor, create}}}: Props) {
                 </TouchableOpacity>
             </View>
             <KeyboardAvoidingView style={[styles.container, {paddingTop: 0}]} behavior="padding" enabled>
-                <View style={styles.mapContainer}>
-                    <MapboxGL.MapView
-                        style={styles.map}
-                        styleURL={mapStyleURL}
-                        onPress={(feature) => {
-                            let coords = feature.geometry.coordinates;
-                            setLon(coords[0]);
-                            setLat(coords[1]);
-                            setHasUpdated(true);
-                        }
-                    }>
-                        <MapboxGL.Camera
-                            centerCoordinate={[lon, lat]}
-                            defaultSettings={{centerCoordinate: [lon, lat], zoomLevel: 15}}
-                        />
-                        <Marker
-                            name={name}
-                            lat={lat}
-                            lon={lon}
-                            id={sensor.uuid}
-                        />
-                    </MapboxGL.MapView>
+                <View style={styles.mapContainer} onLayout={handleLayout}>
+                    {displayMap && 
+                        <MapboxGL.MapView
+                            style={styles.map}
+                            styleURL={mapStyleURL}
+                            onPress={(feature) => {
+                                let coords = feature.geometry.coordinates;
+                                setLon(coords[0]);
+                                setLat(coords[1]);
+                                setHasUpdated(true);
+                            }
+                        }>
+                            <MapboxGL.Camera
+                                centerCoordinate={[lon, lat]}
+                                defaultSettings={{centerCoordinate: [lon, lat], zoomLevel: 15}}
+                            />
+                            <Marker
+                                name={name}
+                                lat={lat}
+                                lon={lon}
+                                id={sensor.uuid}
+                            />
+                        </MapboxGL.MapView>
+                    }
                 </View>
-                <BodyText style={styles.mapTooltip}>
-                    Tap a location on the map to set the device's location. Use two fingers to move the map.
-                </BodyText>
-                <View style={styles.form}>
+                {displayMap && 
+                                    <BodyText style={styles.mapTooltip}>
+                                    Tap a location on the map to set the device's location. Use two fingers to move the map.
+                                </BodyText>
+                }
+                <View style={[styles.form]}>
                     <BodyText>Name</BodyText>
                     <TextInput value={name} style={styles.formInput} onChangeText={(newText) => {setName(newText); setHasUpdated(true)}}/>
                     <BodyText>Notes</BodyText>
@@ -156,7 +171,9 @@ const styles = StyleSheet.create({
     },
     header: {
         display: "flex",
-        flexDirection: "row"
+        flexDirection: "row",
+        zIndex: 10000,
+        backgroundColor: "#fff"
     },
     headerText: {
         lineHeight: 50,
@@ -173,7 +190,6 @@ const styles = StyleSheet.create({
         marginRight: "auto",
         borderRadius: 25,
         overflow: "hidden",
-        backgroundColor: "#ccc",
         height: "35%"
     },
     map: {
@@ -189,7 +205,8 @@ const styles = StyleSheet.create({
     form: {
         marginTop: measures.outerGutter,
         paddingLeft: measures.outerGutter,
-        paddingRight: measures.outerGutter
+        paddingRight: measures.outerGutter,
+        height: "100%"
     },
     formInput: {
         paddingTop: 4,

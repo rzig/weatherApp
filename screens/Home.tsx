@@ -35,8 +35,6 @@ function Home() {
     const camera = useRef<MapboxGL.Camera>();
     const navigation = useNavigation();
 
-    console.warn("My sensors are " + JSON.stringify(sensors));
-
     const transition = () => {
         if(!datavis) {
             camera.current.setCamera({
@@ -50,7 +48,7 @@ function Home() {
                 // centerCoordinate: [-83.002389, 39.959194],
                 pitch: 0,
                 animationDuration: 2000,
-                zoomLevel: 15
+                zoomLevel: 14
             })
         }
         setDatavis(!datavis);
@@ -113,10 +111,6 @@ function Home() {
                         key={sensor.uuid}
                     />
                 ))}
-                {/* <Marker name="Sensor Name" lon={-83.002389} lat={39.959194} id="ann2" onPress={() => alert("hi")}/> */}
-                {/* <MapboxGL.PointAnnotation key="ann1" id="ann1" title="Sensor Name" coordinate={[-83.002389, 39.959194]}>
-                    <View style={{width: 100, height: 100, backgroundColor: "red"}}></View>
-                </MapboxGL.PointAnnotation> */}
             </MapboxGL.MapView>
         </View>
     )
