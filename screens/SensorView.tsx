@@ -92,8 +92,6 @@ function SensorView({route: {params: {sensor, create}}}: Props) {
         }
     }
 
-    console.warn(displayMap);
-
     return (
         <View style={styles.container}>
             <View style={styles.header}>

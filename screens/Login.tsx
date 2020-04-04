@@ -10,6 +10,7 @@ import MaskedView from '@react-native-community/masked-view';
 import Button from '../components/Button'
 import { useNavigation } from '@react-navigation/native'
 import auth from '@react-native-firebase/auth'
+import { t } from 'react-native-tailwindcss';
 
 function Login() {
     const navigation = useNavigation();
@@ -25,7 +26,7 @@ function Login() {
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, t.bgGray200]}>
             <HeaderText level={1} style={styles.headerText}>
                 Welcome Back
             </HeaderText>
